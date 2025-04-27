@@ -6,85 +6,71 @@ telephone numbers.
 
 #PROGRAM
 # Hash Table using Linear Probing
-
 class LinearProbingHashTable:
     def __init__(self, size):
-        # Initialize empty table of given size
         self.size = size
         self.table = [None] * size
 
     def insert(self, key, name):
-        # Insert (key, name) pair using linear probing
-        idx = key % self.size  # Hash function
+        idx = key % self.size
         while self.table[idx] is not None:
-            # If collision happens, move to next index
             idx = (idx + 1) % self.size
         self.table[idx] = (key, name)
 
     def search(self, key):
-        # Search key and count number of comparisons
         comparisons = 0
         idx = key % self.size
         start = idx
         while self.table[idx] is not None:
             comparisons += 1
             if self.table[idx][0] == key:
-                return self.table[idx][1], comparisons  # Return name and comparisons
+                return self.table[idx][1], comparisons
             idx = (idx + 1) % self.size
             if idx == start:
-                break  # If we come back to starting point, stop
+                break
         return None, comparisons
 
     def display(self):
-        # Display the complete table
         for i in range(self.size):
             if self.table[i]:
                 print(f"Index {i}: {self.table[i][0]} -> {self.table[i][1]}")
             else:
                 print(f"Index {i}: Empty")
 
-# Hash Table using Chaining
-
 class Node:
     def __init__(self, key, name):
-        # Node for linked list in chaining
         self.key = key
         self.name = name
         self.next = None
 
 class ChainingHashTable:
     def __init__(self, size):
-        # Initialize empty table
         self.size = size
         self.table = [None] * size
 
     def insert(self, key, name):
-        # Insert (key, name) using chaining
-        idx = key % self.size  # Hash function
+        idx = key % self.size
         new_node = Node(key, name)
         if self.table[idx] is None:
             self.table[idx] = new_node
         else:
             temp = self.table[idx]
-            # Traverse to end of linked list and insert
             while temp.next:
                 temp = temp.next
             temp.next = new_node
 
     def search(self, key):
-        # Search key and count number of comparisons
         comparisons = 0
         idx = key % self.size
         temp = self.table[idx]
         while temp:
             comparisons += 1
             if temp.key == key:
-                return temp.name, comparisons  # Return name and comparisons
+                return temp.name, comparisons
             temp = temp.next
         return None, comparisons
 
     def display(self):
-        # Display full hash table
         for i in range(self.size):
             print(f"Index {i}:", end=" ")
             temp = self.table[i]
@@ -96,19 +82,25 @@ class ChainingHashTable:
                     temp = temp.next
                 print("None")
 
-# Main Program
-
 def main():
-    n = int(input("Enter number of clients: "))
-    lp = LinearProbingHashTable(10)  # Hash table for linear probing
-    ch = ChainingHashTable(10)       # Hash table for chaining
+    clients = [
+        (1234567890, "Alice"),
+        (2345678901, "Bob"),
+        (3456789012, "Charlie"),
+        (4567890123, "Daisy"),
+        (5678901234, "Eve")
+    ]
+
+    print("Enter number of clients:", len(clients))
+    lp = LinearProbingHashTable(10)
+    ch = ChainingHashTable(10)
 
     print("\nEnter client details (Phone Number and Name):")
-    for _ in range(n):
-        phone = int(input("Phone Number: "))
-        name = input("Name: ")
-        lp.insert(phone, name)  # Insert into linear probing table
-        ch.insert(phone, name)  # Insert into chaining table
+    for phone, name in clients:
+        print(f"Phone Number: {phone}")
+        print(f"Name: {name}")
+        lp.insert(phone, name)
+        ch.insert(phone, name)
 
     print("\nLinear Probing Telephone Book:")
     lp.display()
@@ -116,11 +108,11 @@ def main():
     print("\nChaining Telephone Book:")
     ch.display()
 
-    # Search and compare
-    key = int(input("\nEnter phone number to search: "))
+    search_key = 3456789012
+    print(f"\nEnter phone number to search: {search_key}")
 
-    res_lp, comp_lp = lp.search(key)
-    res_ch, comp_ch = ch.search(key)
+    res_lp, comp_lp = lp.search(search_key)
+    res_ch, comp_ch = ch.search(search_key)
 
     if res_lp:
         print(f"\n[Linear Probing] Found {res_lp} with {comp_lp} comparisons.")
@@ -143,6 +135,7 @@ def main():
 if __name__ == "__main__":
     main()
 
+
 PRACTICAL NO :- 02
 To create ADT that implement the "set" concept.
 a. Add (newElement) -Place a value into the set
@@ -157,7 +150,7 @@ h.Subset
 
 #PROGRAM
 class Set:
-    def __init__(self):  # Fixed constructor
+    def __init__(self):
         self.elements = []
         
     def add(self, item): 
@@ -181,7 +174,7 @@ class Set:
         return Set.from_list([e for e in self.elements if other.contains(e)])
     
     def union(self, other):
-        result = Set()  
+        result = Set()
         result.elements = self.elements.copy()
         for e in other.elements: 
             result.add(e)
@@ -200,15 +193,21 @@ class Set:
             s.add(item)
         return s
 
-def create_set(name):
+def create_set(name, elements):
     s = Set()
-    for _ in range(int(input(f"Enter number of elements for {name}: "))):
-        element = input("Enter element: ")  # Ensure to enter as string or make it type-specific if needed
+    print(f"Enter number of elements for {name}: {len(elements)}")
+    for element in elements:
+        print("Enter element:", element)
         s.add(element)
     return s
 
+# Hardcoded elements
+set1_elements = ["apple", "banana", "cherry"]
+set2_elements = ["banana", "cherry", "date", "fig"]
+
 # Create sets
-s1, s2 = create_set("Set 1"), create_set("Set 2")
+s1 = create_set("Set 1", set1_elements)
+s2 = create_set("Set 2", set2_elements)
 
 # Output
 print("Set 1:", list(s1.iterator()))
@@ -217,7 +216,6 @@ print("Intersection:", list(s1.intersection(s2).iterator()))
 print("Union:", list(s1.union(s2).iterator()))
 print("Difference (Set1 - Set2):", list(s1.difference(s2).iterator()))
 print("Set1 is subset of Set2:", s1.subset(s2))
-
 
 PRACTICAL NO :- 03
 A book consists of chapters, chapters consist of sections and sections consist of
@@ -231,26 +229,21 @@ of your method.
 using namespace std;
 using namespace chrono;
 
-// Structure to represent a node in the tree
 struct Node {
     string name;
     vector<Node*> children;
     Node(string nodeName) : name(nodeName) {}
 };
 
-// Function to print the tree structure in a simplified format
 void printTree(Node* root, int& nodeCount) {
     if (!root) return;
-    
     cout << root->name << endl;
     nodeCount++;
-    
     for (Node* child : root->children) {
         printTree(child, nodeCount);
     }
 }
 
-// Function to count the total number of nodes in the tree
 int countNodes(Node* root) {
     if (!root) return 0;
     int count = 1;
@@ -260,7 +253,6 @@ int countNodes(Node* root) {
     return count;
 }
 
-// Function to measure the time taken for an operation
 template <typename Func, typename... Args>
 double measureTime(Func&& func, Args&&... args) {
     auto start = high_resolution_clock::now();
@@ -271,49 +263,38 @@ double measureTime(Func&& func, Args&&... args) {
 }
 
 int main() {
-    // Input the book name
-    cout << "Enter the name of the book: ";
-    string bookName;
-    getline(cin, bookName);
-    
-    // Create the root node for the book
+    // Hardcoded inputs
+    string bookName = "Data Structures and Algorithms";
+
+    vector<string> chapters = {"Arrays", "Linked Lists", "Trees"};
+    vector<vector<string>> sections = {
+        {"Introduction to Arrays", "Operations on Arrays"},
+        {"Introduction to Linked Lists", "Singly Linked List", "Doubly Linked List"},
+        {"Binary Trees", "Binary Search Trees", "AVL Trees"}
+    };
+
+    // Print simulated user input
+    cout << "Enter the name of the book: " << bookName << endl;
     Node* book = new Node("Book: " + bookName);
-    
-    // Input the number of chapters
-    int numChapters;
-    cout << "Enter the number of chapters: ";
-    cin >> numChapters;
-    
-    for (int i = 1; i <= numChapters; i++) {
-        // Input chapter name
-        cout << "Enter the name of Chapter " << i << ": ";
-        cin.ignore();
-        string chapterName;
-        getline(cin, chapterName);
-        
-        // Create a chapter node
-        Node* chapter = new Node("Chapter: " + chapterName);
+
+    int numChapters = chapters.size();
+    cout << "Enter the number of chapters: " << numChapters << endl;
+
+    for (int i = 0; i < numChapters; i++) {
+        cout << "Enter the name of Chapter " << i + 1 << ": " << chapters[i] << endl;
+        Node* chapter = new Node("Chapter: " + chapters[i]);
         book->children.push_back(chapter);
-        
-        // Input the number of sections in the chapter
-        int numSections;
-        cout << "Enter the number of sections in " << chapterName << ": ";
-        cin >> numSections;
-        
-        for (int j = 1; j <= numSections; j++) {
-            // Input section name
-            cout << "Enter the name of Section " << j << ": ";
-            cin.ignore();
-            string sectionName;
-            getline(cin, sectionName);
-            
-            // Create a section node
-            Node* section = new Node("Section: " + sectionName);
+
+        int numSections = sections[i].size();
+        cout << "Enter the number of sections in " << chapters[i] << ": " << numSections << endl;
+
+        for (int j = 0; j < numSections; j++) {
+            cout << "Enter the name of Section " << j + 1 << ": " << sections[i][j] << endl;
+            Node* section = new Node("Section: " + sections[i][j]);
             chapter->children.push_back(section);
         }
     }
-    
-    // Measure the time taken to print the tree structure
+
     int nodeCount = 0;
     double printTime = measureTime([&]() {
         cout << "\nBook: " << bookName << endl;
@@ -321,33 +302,28 @@ int main() {
         for (int i = 0; i < book->children.size(); i++) {
             cout << i + 1 << ". " << book->children[i]->name.substr(9) << endl;
         }
-        
+
         for (int i = 0; i < book->children.size(); i++) {
-            cout << "\nChapter " << i + 1 << " - " << book->children[i]->name.substr(9) << " has " << book->children[i]->children.size() << " sections:" << endl;
+            cout << "\nChapter " << i + 1 << " - " << book->children[i]->name.substr(9)
+                 << " has " << book->children[i]->children.size() << " sections:" << endl;
             for (int j = 0; j < book->children[i]->children.size(); j++) {
                 cout << j + 1 << ". " << book->children[i]->children[j]->name.substr(9) << endl;
             }
         }
-        
+
         printTree(book, nodeCount);
     });
-    
-    // Measure the time taken to count the total number of nodes
+
     double countTime = measureTime([&]() {
         int totalNodes = countNodes(book);
         cout << "\nTotal number of nodes: " << totalNodes << endl;
     });
-    
-    // Print the time taken for each operation
+
     cout << "\nTime taken to print the tree: " << printTime << " seconds" << endl;
     cout << "Time taken to count nodes: " << countTime << " seconds" << endl;
-    
-    // Time and space complexity
     cout << "\nTime Complexity: O(n), Space Complexity: O(n)" << endl;
-    
-    // Delete the tree to free memory
+
     delete book;
-    
     return 0;
 }
 
@@ -365,25 +341,20 @@ v. Search a value
 #include <bits/stdc++.h>
 using namespace std;
 
-// Structure for a node in the binary search tree
 struct Node {
     int data;
     Node* left;
     Node* right;
-
-    // Constructor to initialize a new node
     Node(int val) : data(val), left(NULL), right(NULL) {}
 };
 
-// Function to insert a node into the binary search tree
 Node* insert(Node* root, int val) {
     if (!root) return new Node(val);
-    if (val < root->data) root->left = insert(root->left, val); // Insert in left subtree
-    else root->right = insert(root->right, val); // Insert in right subtree
+    if (val < root->data) root->left = insert(root->left, val);
+    else root->right = insert(root->right, val);
     return root;
 }
 
-// Preorder traversal of the binary search tree
 void preorder(Node* root) {
     if (root) {
         cout << root->data << " ";
@@ -392,31 +363,23 @@ void preorder(Node* root) {
     }
 }
 
-// Function to find the height (longest path) of the tree
 int height(Node* root) {
-    if (!root) return -1; // Returns -1 for an empty tree, since height is the number of edges
-    return 1 + max(height(root->left), height(root->right)); // Return height of the tree
+    return root ? 1 + max(height(root->left), height(root->right)) : -1;
 }
 
-// Function to find the minimum value in the binary search tree
 int minimum(Node* root) {
     return root->left ? minimum(root->left) : root->data;
 }
 
-// Function to search for a value in the tree
 bool search(Node* root, int key) {
-    if (!root) return false; // If root is null, return false
-    if (root->data == key) return true; // If the current node is the key, return true
-    if (key < root->data) // Search left if key is smaller than root data
-        return search(root->left, key);
-    else // Otherwise search right if key is greater than root data
-        return search(root->right, key);
+    if (!root) return false;
+    if (root->data == key) return true;
+    return key < root->data ? search(root->left, key) : search(root->right, key);
 }
 
-// Function to mirror the tree (swap left and right pointers)
 void mirror(Node* root) {
     if (root) {
-        swap(root->left, root->right); // Swap left and right children
+        swap(root->left, root->right);
         mirror(root->left);
         mirror(root->right);
     }
@@ -424,41 +387,29 @@ void mirror(Node* root) {
 
 int main() {
     Node* root = NULL;
-    int n;
+    vector<int> nodes = {50, 30, 70, 20, 40, 60, 80}; // Predefined nodes
+    int n = nodes.size();
 
-    // Input the number of nodes to insert
-    cout << "Enter number of nodes: ";
-    cin >> n;
-
-    // Insert the nodes into the binary search tree
+    cout << "Enter number of nodes: " << n << endl;
     for (int i = 0; i < n; ++i) {
-        int val;
-        cout << "Enter node " << i + 1 << ": ";
-        cin >> val;
-        root = insert(root, val);
+        cout << "Enter node " << i + 1 << ": " << nodes[i] << endl;
+        root = insert(root, nodes[i]);
     }
 
-    // Preorder traversal of the tree
     cout << "BST Preorder Traversal: ";
     preorder(root);
     cout << endl;
 
-    // Height of the tree (longest path)
     cout << "Height (Longest Path): " << height(root) << endl;
-
-    // Minimum value in the tree
     cout << "Minimum value: " << minimum(root) << endl;
 
-    // Mirror the tree and show the result
     mirror(root);
     cout << "Mirrored BST Preorder Traversal: ";
     preorder(root);
     cout << endl;
 
-    // Search for a value
-    int key;
-    cout << "Enter key to search: ";
-    cin >> key;
+    int key = 60; // Predefined key to search
+    cout << "Enter key to search: " << key << endl;
     if (search(root, key))
         cout << "Key " << key << " is present in the BST!" << endl;
     else
@@ -473,64 +424,66 @@ Convert given binary tree into threaded binary tree. Analyze time and space comp
 of the algorithm. 
 
 #PROGRAM
-#include <bits/stdc++.h>
+#include <iostream>
 using namespace std;
-using namespace chrono;
-
-struct Node {
+class Node {
+public:
     int data;
     Node *left, *right;
-    bool isThreaded;
+    bool rightThread;
 
-    Node(int val) : data(val), left(nullptr), right(nullptr), isThreaded(false) {}
+    Node(int val) {
+        data = val;
+        left = right = nullptr;
+        rightThread = false;
+    }
+};
+class TBT {
+    Node* prev = nullptr;
+
+public:
+    void createThreads(Node* root) {
+        if (!root) return;
+        createThreads(root->left);
+        if (prev && !prev->right) {
+            prev->right = root;
+            prev->rightThread = true;
+        }
+        prev = root;
+        createThreads(root->right);
+    }
+
+    void inorder(Node* root) {
+        Node* curr = leftMost(root);
+        while (curr) {
+            cout << curr->data << " ";
+            if (curr->rightThread)
+                curr = curr->right;
+            else
+                curr = leftMost(curr->right);
+        }
+    }
+
+private:
+    Node* leftMost(Node* node) {
+        while (node && node->left)
+            node = node->left;
+        return node;
+    }
 };
 
-int nodeCount = 0;
-
-void createThreaded(Node* root, Node* &prev) {
-    if (!root) return;
-    createThreaded(root->left, prev);
-
-    if (prev && prev->right == nullptr) {
-        prev->right = root;
-        prev->isThreaded = true;
-    }
-    prev = root;
-    createThreaded(root->right, prev);
-}
-
-Node* leftmost(Node* root) {
-    while (root && root->left) root = root->left;
-    return root;
-}
-
-void inorderTraversal(Node* root) {
-    for (Node* current = leftmost(root); current != nullptr; current = (current->isThreaded ? current->right : leftmost(current->right))) {
-        cout << current->data << " ";
-    }
-}
-
-Node* insert(Node* root, int key) {
-    if (!root) { nodeCount++; return new Node(key); }
-    root = (key < root->data) ? insert(root->left, key) : insert(root->right, key);
-    return root;
-}
-
 int main() {
-    auto start = high_resolution_clock::now();
-    Node* root = nullptr;
-    for (int key : {10, 5, 20, 3, 7, 15, 25}) root = insert(root, key);
+    Node* root = new Node(20);
+    root->left = new Node(10);
+    root->right = new Node(30);
+    root->left->left = new Node(5);
+    root->left->right = new Node(15);
 
-    Node* prev = nullptr;
-    createThreaded(root, prev);
+    TBT tree;
+    tree.createThreads(root);
 
-    auto end = high_resolution_clock::now();
-    cout << "Inorder Traversal using Threaded Binary Tree: ";
-    inorderTraversal(root);
-    cout << "\nExecution Time: " << duration_cast<microseconds>(end - start).count() << " microseconds\n";
-
-    int spaceUsed = nodeCount * sizeof(Node);
-    cout << "Total Nodes Created: " << nodeCount << "\nApproximate Space Used: " << spaceUsed << " bytes\n";
+    cout << "Inorder Traversal (Threaded): ";
+    tree.inorder(root);
 
     return 0;
 }
@@ -545,33 +498,37 @@ Check whether the graph is connected or not. Justify the storage representation 
 #PROGRAM
 #include <iostream>
 #include <queue>
+#include <cstring>  // for memset
 using namespace std;
 
-int adj_mat[50][50] = {0};  // Adjacency matrix for graph representation
-int visited[50] = {0};       // Visited array for DFS and BFS
+const int MAX = 50;
+int adj_mat[MAX][MAX] = {0};  // Adjacency matrix
+int visited[MAX] = {0};       // Visited array
 
 // DFS Function
 void dfs(int s, int n, string arr[]) {
     visited[s] = 1;
     cout << arr[s] << " ";
     for (int i = 0; i < n; i++) {
-        if (adj_mat[s][i] && !visited[i]) dfs(i, n, arr);
+        if (adj_mat[s][i] && !visited[i]) {
+            dfs(i, n, arr);
+        }
     }
 }
 
 // BFS Function
 void bfs(int s, int n, string arr[]) {
-    bool visited[n] = {0};  // Reset visited for BFS
+    int bfs_visited[MAX] = {0};  // Corrected
     queue<int> q;
-    visited[s] = 1;
+    bfs_visited[s] = 1;
     q.push(s);
     cout << arr[s] << " ";
     while (!q.empty()) {
         int v = q.front(); q.pop();
         for (int i = 0; i < n; i++) {
-            if (adj_mat[v][i] && !visited[i]) {
+            if (adj_mat[v][i] && !bfs_visited[i]) {
                 cout << arr[i] << " ";
-                visited[i] = 1;
+                bfs_visited[i] = 1;
                 q.push(i);
             }
         }
@@ -579,22 +536,27 @@ void bfs(int s, int n, string arr[]) {
 }
 
 int main() {
-    int n, u;
-    cout << "Enter number of cities: ";
-    cin >> n;
-    
-    string cities[n];
+    int n = 4;  // Number of cities
+    cout << "Enter number of cities: " << n << endl;
+
+    string cities[] = {"DEL", "MUM", "BLR", "HYD"};
     for (int i = 0; i < n; i++) {
-        cout << "Enter city #" << i + 1 << " (Airport Code): ";
-        cin >> cities[i];
+        cout << "Enter city #" << i + 1 << " (Airport Code): " << cities[i] << endl;
     }
 
-    // Input distances between cities
+    // Hardcoded distances between cities
+    int distances[4][4] = {
+        {0, 2, 5, 0},
+        {2, 0, 4, 7},
+        {5, 4, 0, 3},
+        {0, 7, 3, 0}
+    };
+
+    // Fill adjacency matrix
     for (int i = 0; i < n; i++) {
         for (int j = i + 1; j < n; j++) {
-            cout << "Enter distance (time/fuel) between " << cities[i] << " and " << cities[j] << ": ";
-            cin >> adj_mat[i][j];
-            adj_mat[j][i] = adj_mat[i][j];  // Since the graph is undirected
+            cout << "Enter distance (time/fuel) between " << cities[i] << " and " << cities[j] << ": " << distances[i][j] << endl;
+            adj_mat[i][j] = adj_mat[j][i] = distances[i][j];
         }
     }
 
@@ -608,14 +570,13 @@ int main() {
         cout << endl;
     }
 
-    // Input starting city for traversal
-    cout << "Enter starting city (index 0 to " << n - 1 << "): ";
-    cin >> u;
+    int u = 0;  // Starting city index
+    cout << "Enter starting city (index 0 to " << n - 1 << "): " << u << endl;
 
-    // Perform DFS and BFS
     cout << "DFS: ";
-    fill(begin(visited), end(visited), 0);  // Reset visited array
+    memset(visited, 0, sizeof(visited));  // Reset visited
     dfs(u, n, cities);
+
     cout << "\nBFS: ";
     bfs(u, n, cities);
     cout << endl;
@@ -637,42 +598,27 @@ using namespace std;
 #define INF 999
 
 class PrimMST {
-    int graph[20][20], V;
+    int graph[5][5] = {
+        {INF, 2, 3, INF, INF},
+        {2, INF, INF, 4, INF},
+        {3, INF, INF, 1, 5},
+        {INF, 4, 1, INF, 6},
+        {INF, INF, 5, 6, INF}
+    };
+    int V = 5;
 
 public:
-    void input();
     void display();
     void findMST();
 };
 
-void PrimMST::input() {
-    cout << "Enter number of offices: ";
-    cin >> V;
-
-    // Initialize graph with INF
-    for (int i = 0; i < V; i++)
-        for (int j = 0; j < V; j++)
-            graph[i][j] = INF;
-
-    int E;
-    cout << "Enter number of connections: ";
-    cin >> E;
-
-    cout << "Enter edges (office1 office2 cost):\n";
-    for (int i = 0; i < E; i++) {
-        int u, v, cost;
-        cin >> u >> v >> cost;
-        graph[u-1][v-1] = graph[v-1][u-1] = cost;
-    }
-}
-
 void PrimMST::display() {
     cout << "\nAdjacency Matrix:\n   ";
-    for (int i = 0; i < V; i++) cout << i+1 << "   ";
+    for (int i = 0; i < V; i++) cout << i + 1 << "   ";
     cout << endl;
 
     for (int i = 0; i < V; i++) {
-        cout << i+1 << " ";
+        cout << i + 1 << " ";
         for (int j = 0; j < V; j++)
             cout << (graph[i][j] == INF ? "INF" : to_string(graph[i][j])) << " ";
         cout << endl;
@@ -707,7 +653,7 @@ void PrimMST::findMST() {
     cout << "\nMinimum Spanning Tree (MST) connections:\n";
     int totalCost = 0;
     for (int i = 1; i < V; i++) {
-        cout << "Office " << parent[i]+1 << " -> Office " << i+1
+        cout << "Office " << parent[i] + 1 << " -> Office " << i + 1
              << " with cost: " << graph[i][parent[i]] << endl;
         totalCost += graph[i][parent[i]];
     }
@@ -716,20 +662,8 @@ void PrimMST::findMST() {
 
 int main() {
     PrimMST p;
-    int choice;
-    do {
-        cout << "\n======= PRIM'S ALGORITHM =======\n";
-        cout << "1. Input Graph\n2. Display Graph\n3. Find MST\n4. Exit\nEnter choice: ";
-        cin >> choice;
-        switch (choice) {
-            case 1: p.input(); break;
-            case 2: p.display(); break;
-            case 3: p.findMST(); break;
-            case 4: cout << "Exiting...\n"; break;
-            default: cout << "Invalid choice!\n";
-        }
-    } while (choice != 4);
-
+    p.display();
+    p.findMST();
     return 0;
 }
 
@@ -867,8 +801,15 @@ public:
 
 int main() {
     Dictionary d;
+
+    // Hardcoded dictionary entries
+    d.insert("apple", "A fruit that grows on an apple tree.");
+    d.insert("banana", "A yellow fruit that is long and curved.");
+    d.insert("computer", "An electronic device for storing and processing data.");
+    d.insert("dictionary", "A reference book containing an alphabetical list of words.");
+    d.insert("algorithm", "A step-by-step procedure for solving a problem or completing a task.");
+
     int choice;
-    string key, meaning;
     const string menu[] = {
         "1. Insert Keyword", "2. Delete Keyword",
         "3. Display Dictionary (Ascending)", "4. Display Dictionary (Descending)",
@@ -884,28 +825,20 @@ int main() {
 
         switch (choice) {
             case 1:
-                cout << "Enter keyword: ";
-                cin >> key;
-                cout << "Enter meaning: ";
-                cin.ignore();
-                getline(cin, meaning);
-                d.insert(key, meaning);
+                // For case 1, it's redundant because all keywords are inserted already
+                cout << "Keywords already inserted in the dictionary.\n";
                 break;
             case 2:
-                cout << "Enter keyword to delete: ";
-                cin >> key;
-                d.remove(key);
+                d.remove("computer");  // Hardcoded to delete "computer"
                 break;
             case 3:
-                d.display(true);
+                d.display(true);  // Display in ascending order
                 break;
             case 4:
-                d.display(false);
+                d.display(false);  // Display in descending order
                 break;
             case 5:
-                cout << "Enter keyword to search: ";
-                cin >> key;
-                d.search(key);
+                d.search("banana");  // Hardcoded to search for "banana"
                 break;
             case 6:
                 cout << "Exiting program...\n";
@@ -917,6 +850,7 @@ int main() {
 
     return 0;
 }
+
 
 PRACTICAL NO :- 10
 Read the marks obtained by students of second year in an online examination of
@@ -963,89 +897,54 @@ file to main the data
 #PROGRAM
 #include <iostream>
 #include <fstream>
-#include <sstream>
-#include <string>
 using namespace std;
 
-struct Student { int roll; string name, div, addr; };
-
-void addStudent() {
-    ofstream f("students.txt", ios::app);
-    if (!f) { cout << "Error opening file!\n"; return; }
-    Student s;
-    cout << "Enter Roll Number: "; cin >> s.roll; cin.ignore();
-    cout << "Enter Name: "; getline(cin, s.name);
-    cout << "Enter Division: "; getline(cin, s.div);
-    cout << "Enter Address: "; getline(cin, s.addr);
-    f << s.roll << ',' << s.name << ',' << s.div << ',' << s.addr << '\n';
-    cout << "Student added successfully!\n";
-}
-
-void displayAllStudents() {
-    ifstream f("students.txt");
-    if (!f) { cout << "No records found!\n"; return; }
-    string l; bool found = false;
-    cout << "\nStudent Records:\n-------------------------------------------\n";
-    cout << "Roll No | Name | Division | Address\n-------------------------------------------\n";
-    while (getline(f, l)) {
-        stringstream ss(l); Student s; string r;
-        getline(ss, r, ','); getline(ss, s.name, ',');
-        getline(ss, s.div, ','); getline(ss, s.addr, ',');
-        cout << stoi(r) << " | " << s.name << " | " << s.div << " | " << s.addr << endl;
-        found = true;
-    }
-    if (!found) cout << "No student records found!\n";
-}
-
-void displayStudent(int roll) {
-    ifstream f("students.txt");
-    if (!f) { cout << "No records found!\n"; return; }
-    string l; bool found = false;
-    while (getline(f, l)) {
-        stringstream ss(l); Student s; string r;
-        getline(ss, r, ','); getline(ss, s.name, ',');
-        getline(ss, s.div, ','); getline(ss, s.addr, ',');
-        if (stoi(r) == roll) {
-            cout << "\nStudent Found:\nRoll Number: " << r << "\nName: " << s.name
-                 << "\nDivision: " << s.div << "\nAddress: " << s.addr << endl;
-            found = true; break;
-        }
-    }
-    if (!found) cout << "Student record not found!\n";
-}
-
-void deleteStudent(int roll) {
-    ifstream f("students.txt");
-    if (!f) { cout << "No records found!\n"; return; }
-    ofstream t("temp.txt");
-    string l; bool found = false;
-    while (getline(f, l)) {
-        stringstream ss(l); Student s; string r;
-        getline(ss, r, ','); getline(ss, s.name, ',');
-        getline(ss, s.div, ','); getline(ss, s.addr, ',');
-        if (stoi(r) == roll) { found = true; continue; }
-        t << l << '\n';
-    }
-    f.close(); t.close();
-    remove("students.txt"); rename("temp.txt", "students.txt");
-    cout << (found ? "Student record deleted successfully!\n" : "Student record not found!\n");
-}
+struct Student {
+    int roll;
+    char name[20];
+    float marks;
+};
 
 int main() {
-    int ch, roll;
+    fstream file;
+    Student s;
+    int choice;
+
     do {
-        cout << "\nStudent Information System\n1. Add Student\n2. Display All Students\n";
-        cout << "3. Display Student by Roll Number\n4. Delete Student\n5. Exit\nEnter your choice: ";
-        cin >> ch;
-        switch (ch) {
-            case 1: addStudent(); break;
-            case 2: displayAllStudents(); break;
-            case 3: cout << "Enter Roll Number to Search: "; cin >> roll; displayStudent(roll); break;
-            case 4: cout << "Enter Roll Number to Delete: "; cin >> roll; deleteStudent(roll); break;
-            case 5: cout << "Exiting...\n"; break;
-            default: cout << "Invalid choice! Please try again.\n";
+        cout << "\n1.Add  2.Display  3.Exit\nChoice: ";
+        cin >> choice;
+
+        if (choice == 1) {
+            // Taking input for a new student
+            cout << "Enter Roll, Name, Marks: ";
+            cin >> s.roll >> s.name >> s.marks;
+
+            // Open file in append mode to add student data
+            file.open("students.dat", ios::app | ios::binary);
+            if (file.is_open()) {
+                file.write((char*)&s, sizeof(s));
+                cout << "Student added successfully.\n";
+                file.close();
+            } else {
+                cout << "Unable to open file for writing.\n";
+            }
         }
-    } while (ch != 5);
+        else if (choice == 2) {
+            // Displaying student data
+            file.open("students.dat", ios::in | ios::binary);
+            if (file.is_open()) {
+                cout << "\nStudent Records:\n";
+                while (file.read((char*)&s, sizeof(s))) {
+                    cout << "Roll: " << s.roll << ", Name: " << s.name << ", Marks: " << s.marks << endl;
+                }
+                file.close();
+            } else {
+                cout << "Unable to open file for reading.\n";
+            }
+        }
+    } while (choice != 3);
+
+    return 0;
 }
 
 PRACTICAL NO :- 12
@@ -1057,68 +956,70 @@ the system displays the employee details. Use index sequential file to maintain 
 #PROGRAM
 #include <iostream>
 #include <fstream>
-#include <sstream>
-#include <string>
 using namespace std;
 
-struct Employee { int id; string name, desig; float sal; };
-
-void addEmployee() {
-    ofstream f("employees.txt", ios::app);
-    if (!f) { cout << "Error opening file!\n"; return; }
-    Employee e;
-    cout << "Enter Employee ID: "; cin >> e.id; cin.ignore();
-    cout << "Enter Name: "; getline(cin, e.name);
-    cout << "Enter Designation: "; getline(cin, e.desig);
-    cout << "Enter Salary: "; cin >> e.sal;
-    f << e.id << ',' << e.name << ',' << e.desig << ',' << e.sal << '\n';
-    cout << "Employee added successfully!\n";
-}
-
-void searchEmployee(int id) {
-    ifstream f("employees.txt");
-    if (!f) { cout << "No records found!\n"; return; }
-    string l; bool found = false;
-    while (getline(f, l)) {
-        stringstream ss(l); Employee e; string idStr;
-        getline(ss, idStr, ','); getline(ss, e.name, ','); getline(ss, e.desig, ','); ss >> e.sal;
-        if (stoi(idStr) == id) {
-            cout << "\nEmployee Found:\nID: " << idStr << "\nName: " << e.name
-                 << "\nDesignation: " << e.desig << "\nSalary: " << e.sal << endl;
-            found = true; break;
-        }
-    }
-    if (!found) cout << "Employee record not found!\n";
-}
-
-void deleteEmployee(int id) {
-    ifstream f("employees.txt");
-    if (!f) { cout << "No records found!\n"; return; }
-    ofstream t("temp.txt");
-    string l; bool found = false;
-    while (getline(f, l)) {
-        stringstream ss(l); Employee e; string idStr;
-        getline(ss, idStr, ','); getline(ss, e.name, ','); getline(ss, e.desig, ','); ss >> e.sal;
-        if (stoi(idStr) == id) { found = true; continue; }
-        t << l << '\n';
-    }
-    f.close(); t.close();
-    remove("employees.txt"); rename("temp.txt", "employees.txt");
-    cout << (found ? "Employee record deleted successfully!\n" : "Employee record not found!\n");
-}
+struct Employee {
+    int id;
+    char name[20];
+    float salary;
+};
 
 int main() {
-    int ch, id;
+    fstream file;
+    Employee e;
+    int choice, searchId;
+    
     do {
-        cout << "\nCompany Employee Management System\n1. Add Employee\n2. Search Employee\n";
-        cout << "3. Delete Employee\n4. Exit\nEnter your choice: ";
-        cin >> ch;
-        switch (ch) {
-            case 1: addEmployee(); break;
-            case 2: cout << "Enter Employee ID to Search: "; cin >> id; searchEmployee(id); break;
-            case 3: cout << "Enter Employee ID to Delete: "; cin >> id; deleteEmployee(id); break;
-            case 4: cout << "Exiting...\n"; break;
-            default: cout << "Invalid choice! Please try again.\n";
+        cout << "\n1.Add 2.Search 3.Display 4.Exit\nChoice: ";
+        cin >> choice;
+        
+        if (choice == 1) {
+            // Add new employee
+            cout << "Enter ID, Name, Salary: ";
+            cin >> e.id >> e.name >> e.salary;
+            file.open("emp.dat", ios::app | ios::binary);
+            if (file.is_open()) {
+                file.write((char*)&e, sizeof(e));
+                file.close();
+                cout << "Employee added successfully.\n";
+            } else {
+                cout << "Error opening file.\n";
+            }
         }
-    } while (ch != 4);
+        else if (choice == 2) {
+            // Search for an employee by ID
+            cout << "Enter ID to search: ";
+            cin >> searchId;
+            file.open("emp.dat", ios::in | ios::binary);
+            bool found = false;
+            if (file.is_open()) {
+                while (file.read((char*)&e, sizeof(e))) {
+                    if (e.id == searchId) {
+                        cout << "Employee found: " << e.id << " " << e.name << " " << e.salary << endl;
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) cout << "Record not found\n";
+                file.close();
+            } else {
+                cout << "Error opening file.\n";
+            }
+        }
+        else if (choice == 3) {
+            // Display all employees
+            file.open("emp.dat", ios::in | ios::binary);
+            if (file.is_open()) {
+                cout << "\nEmployee Records:\n";
+                while (file.read((char*)&e, sizeof(e))) {
+                    cout << e.id << " " << e.name << " " << e.salary << endl;
+                }
+                file.close();
+            } else {
+                cout << "Error opening file.\n";
+            }
+        }
+    } while (choice != 4);
+    
+    return 0;
 }
